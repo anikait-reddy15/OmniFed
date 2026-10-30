@@ -1,0 +1,24 @@
+services:
+  omnifed-server:
+    build: .
+    container_name: omnifed_server
+    ports:
+      - "8080:8080"
+      - "5000:5000"
+    command: python src/server.py
+    volumes:
+      - ./data:/app/data
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  omnifed-client-1:
+    build: .
+    container_name: omnifed_client_1
+    command: python src/client.py
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      - omnifed-server
+    environment:
+      - PYTHONUNBUFFERED=1
+      - SERVER_HOST=omnifed-server
